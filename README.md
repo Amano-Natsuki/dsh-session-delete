@@ -39,7 +39,7 @@ DSH ships with archive only; an archived session stays on disk forever. This plu
 Clone into a folder of your choice and deploy it into a profile:
 
 ```bash
-git clone https://github.com/<owner>/dsh-session-delete.git
+git clone https://github.com/Amano-Natsuki/dsh-session-delete.git
 cd dsh-session-delete
 node scripts/deploy.mjs desktop        # profile name, default "desktop"
 ```

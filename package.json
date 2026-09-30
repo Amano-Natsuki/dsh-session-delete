@@ -29,5 +29,9 @@
     "session",
     "delete"
   ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Amano-Natsuki/dsh-session-delete.git"
+  },
   "license": "MIT"
 }
