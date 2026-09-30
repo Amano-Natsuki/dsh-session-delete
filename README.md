@@ -48,11 +48,21 @@ Windows, macOS, and Linux — the plugin holds no platform-specific assumptions:
 
 ## Install
 
+### From the npm registry (recommended)
+
+```bash
+dsh plugin install dsh-plugin-session-delete
+```
+
+The plugin manager installs the package into the active profile and registers the row. If you prefer the UI, the same package is installable from **Settings → Plugins**. Restart the harness afterwards, then a red *Delete session…* row appears in each session's context menu.
+
+### Manual (git clone + deploy script)
+
 Clone into a folder of your choice and deploy it into a profile:
 
 ```bash
 git clone https://github.com/Amano-Natsuki/dsh-session-delete.git
-cd dsh-plugin-session-delete
+cd dsh-session-delete
 node scripts/deploy.mjs desktop        # profile name, default "desktop"
 ```
 
@@ -78,7 +88,7 @@ and declare the dependency in `<profile>/package.json`:
 
 Restart the harness. A red *Delete session…* row appears in each session's context menu.
 
-> The entry uses a **relative path** on purpose: at cold boot the loader's resolution base is unset, so a bare package name cannot reach the profile's `node_modules`. `parsePatchList` anchors relative paths to the patch file's directory and loads them as file URLs.
+> The manual entry uses a **relative path** on purpose: at cold boot the loader's resolution base is unset, so a bare package name cannot reach the profile's `node_modules`. `parsePatchList` anchors relative paths to the patch file's directory and loads them as file URLs. The npm-installed flow registers the bare package name instead and relies on DSH's profile resolution layer.
 
 ## Architecture
 
@@ -115,6 +125,8 @@ MIT
 
 **dsh-plugin-session-delete** 给 DeepSeek Harness 补上缺失的「真正删除会话」能力:侧栏会话菜单里的红色入口 + 二次确认,删除前自动停止运行中的工作、拒绝删除有 fork 子会话的会话,并彻底清除事件日志、workspace 计账、归档/置顶集合、投影缓存与 spill 文件,本地零残留。删除后侧栏通过事件流自动更新,不刷新页面。
 
-安装:克隆仓库 → `node scripts/deploy.mjs desktop` → 在 `cordis.patch.yml` 中加入条目、在 profile `package.json` 中声明依赖 → 重启 Harness。详见上方英文步骤。
+安装(推荐):`dsh plugin install dsh-plugin-session-delete`,重启 Harness 即可;也可以从设置 → 插件页面安装。
+
+手动安装:克隆仓库 → `node scripts/deploy.mjs desktop` → 在 `cordis.patch.yml` 中加入条目、在 profile `package.json` 中声明依赖 → 重启 Harness。详见上方英文步骤。
 
 已知边界:已上报的遥测无法撤回;其他会话里提到该会话的文字属于别的会话;fork 子会话的 header 仍可能记录其父会话 id(因此有子会话时拒绝删除父会话)。
