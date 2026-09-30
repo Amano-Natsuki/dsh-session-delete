@@ -1,4 +1,4 @@
-# dsh-session-delete
+# dsh-plugin-session-delete
 
 > A [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) plugin that **permanently deletes a session** from the sidebar menu — with a confirmation step, no running work left behind, and **zero local residue**.
 
@@ -34,24 +34,36 @@ DSH ships with archive only; an archived session stays on disk forever. This plu
   - the JSONL session-persistence backend (the default `session-persistence-jsonl` root layout)
 - The plugin declares **no peer dependencies**, so the compatibility preflight never disables it; if a future DSH version changes the storage layout, review the paths below before upgrading.
 
+## Platform support
+
+Windows, macOS, and Linux — the plugin holds no platform-specific assumptions:
+
+- every path is composed with `node:path` (`join`), never a hard-coded separator
+- the session-directory encoding mirrors DSH's own `projectKey` / `encodeSegment`, which fold `\`, `/`, and `:` the same way on every platform
+- the session root comes from the mounted backend (`sessionPersistence.root`), so a relocated root is honored
+- the harness home follows `$DSH_HOME` → `~/.dsh`, with both `~/` and `~\` prefixes expanded
+- the loopback guard accepts `127.0.0.1`, `localhost`, `::1`, and `[::1]`, so a macOS host that resolves `localhost` to IPv6 is still accepted
+- file removal uses `fs.rm({ recursive: true, force: true })`; macOS/Linux unlink semantics are more permissive than Windows, so the live-writer retry loop only ever helps there
+- the browser half is platform-neutral by construction
+
 ## Install
 
 Clone into a folder of your choice and deploy it into a profile:
 
 ```bash
 git clone https://github.com/Amano-Natsuki/dsh-session-delete.git
-cd dsh-session-delete
+cd dsh-plugin-session-delete
 node scripts/deploy.mjs desktop        # profile name, default "desktop"
 ```
 
-The script copies the package into `<DSH_HOME or ~/.dsh>/profiles/<profile>/node_modules/dsh-session-delete/`.
+The script copies the package into `<DSH_HOME or ~/.dsh>/profiles/<profile>/node_modules/dsh-plugin-session-delete/`.
 
 Then register the row in the profile patch `<profile>/cordis.patch.yml`:
 
 ```yaml
 - insert:
     - id: session-delete
-      name: './node_modules/dsh-session-delete/lib/index.js'
+      name: './node_modules/dsh-plugin-session-delete/lib/index.js'
 ```
 
 and declare the dependency in `<profile>/package.json`:
@@ -59,7 +71,7 @@ and declare the dependency in `<profile>/package.json`:
 ```json
 {
   "dependencies": {
-    "dsh-session-delete": "link:./node_modules/dsh-session-delete"
+    "dsh-plugin-session-delete": "link:./node_modules/dsh-plugin-session-delete"
   }
 }
 ```
@@ -101,7 +113,7 @@ MIT
 
 ## 中文说明
 
-**dsh-session-delete** 给 DeepSeek Harness 补上缺失的「真正删除会话」能力:侧栏会话菜单里的红色入口 + 二次确认,删除前自动停止运行中的工作、拒绝删除有 fork 子会话的会话,并彻底清除事件日志、workspace 计账、归档/置顶集合、投影缓存与 spill 文件,本地零残留。删除后侧栏通过事件流自动更新,不刷新页面。
+**dsh-plugin-session-delete** 给 DeepSeek Harness 补上缺失的「真正删除会话」能力:侧栏会话菜单里的红色入口 + 二次确认,删除前自动停止运行中的工作、拒绝删除有 fork 子会话的会话,并彻底清除事件日志、workspace 计账、归档/置顶集合、投影缓存与 spill 文件,本地零残留。删除后侧栏通过事件流自动更新,不刷新页面。
 
 安装:克隆仓库 → `node scripts/deploy.mjs desktop` → 在 `cordis.patch.yml` 中加入条目、在 profile `package.json` 中声明依赖 → 重启 Harness。详见上方英文步骤。
 
