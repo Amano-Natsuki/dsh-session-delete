@@ -1,6 +1,6 @@
 {
   "name": "dsh-plugin-session-delete",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Delete a DeepSeek Harness session permanently and with zero local residue: sidebar menu entry with confirmation, stops running work, refuses sessions with forked children, and clears the event log, workspace accounting, archive/pin sets, projection cache, and spill files.",
   "type": "module",
   "main": "lib/index.js",
