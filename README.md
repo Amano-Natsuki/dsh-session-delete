@@ -22,9 +22,9 @@ DSH ships with archive only; an archived session stays on disk forever. This plu
   4. the **event-log directory** `<persistence root>/<projectKey>/<encodedSessionId>/`
   5. the **projection cache** entry `<harness home>/storages/session_projcache/sessions/<id>.json`
   6. **spill files** `<tmp>/dsh-spill-*/session-<sha256(id)[:12]>/`
-- **Browser-side state** — the delete also clears this page's persisted per-session keys (drafts, view state, panel layout written by the shipped UI plugins through the client store; their values never hold transcript content, but they name the session id)
+- **Browser-side state** — the delete also clears this page's persisted per-session keys (drafts, view state, panel layout written by the shipped UI plugins through the client store; their values never hold transcript content, but they name the session id) and then re-pulls the session list from the host.
 - **Live-session handling** — a session that was opened once keeps a writer for the process lifetime. The plugin stops its activity, waits for the settling flush, then removes files in a short retry loop. If a file is still held, the id is journaled and reaped automatically on the next start (when every session is cold).
-- **No page reload** — after deletion the sidebar updates through the `api-session/removed` event stream, exactly like workspace deletion.
+- **No page reload, and no stale row for cold sessions** — a never-opened session is absent from the host's live store, so its removal emits no `session/disposed` (and therefore no forwarded `api-session/removed` frame); the browser half re-pulls the authoritative list after a committed delete, which covers both cold and live sessions. Without that pull the sidebar keeps a row whose history no longer loads (`session/not-found`).
 - **Localized menu copy** — Chinese for `zh*` browser locales, English otherwise; colors follow the active theme through DSH theme tokens.
 
 ## Requirements
