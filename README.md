@@ -31,7 +31,7 @@ DSH ships with archive only; an archived session stays on disk forever. This plu
 
 ## Requirements
 
-- DeepSeek Harness desktop `0.2.0-rc.2` or a compatible build with the same plugin surface:
+- DeepSeek Harness desktop `0.2.2-rc.1` (verified) or a compatible `0.2.x` build with the same plugin surface:
   - host services `webServer`, `workspaceRegistry`, `sessionPersistence`, `sessions`
   - optionally `agents` (only used to report/await running children; the delete works without it)
   - the browser slot `sidebar.workspaces.session.menu.item`
