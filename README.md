@@ -124,7 +124,7 @@ Restart the harness. A red *Delete session…* row appears in each session's con
 
 ## Development
 
-- `npm test` (or `node --test test/session-delete.test.mjs`) — 11 cases: path helpers, lineage split (agent children vs forks), preview counts, cascade delete against temporary harness homes, unexpected project keys, deferred journal + reap, fail-closed listing, invalid/missing ids, child-only delete, and the HTTP route (GET preview, POST delete, method and cross-site guards)
+- `npm test` — 17 cases (host 11 + browser 6): path helpers, lineage split (agent children vs forks), preview counts, cascade delete against temporary harness homes, unexpected project keys, deferred journal + reap, fail-closed listing, invalid/missing ids, child-only delete, the HTTP route (GET preview, POST delete, method and cross-site guards); then the real `lib/client.js` in a minimal browser + React-hooks stand-in: preview round-trip wording, fork notice, already-gone handling, delete + localStorage cleanup (global view state kept), preview-failure fallback, English copy
 - `scripts/deploy.mjs [profile]` — deploy to a profile (byte-exact, no BOM, name/module-id consistency check)
 - Host-half changes need a harness restart; browser-half changes need a page reload (`client-modules` versions bundles by file revision)
 - Edit `lib/index.js` / `lib/client.js` only; the browser half is plain JavaScript (no JSX/TypeScript) and may `require` only modules already present in the web module table (`react` here)
@@ -147,4 +147,4 @@ MIT
 
 安装(推荐):`dsh plugin install dsh-plugin-session-delete`,重启 Harness 即可;也可以从设置 → 插件页面安装。手动安装:克隆仓库 → `node scripts/deploy.mjs desktop` → 在 `cordis.patch.yml` 中加入条目、在 profile `package.json` 中声明依赖 → 重启 Harness。详见上方英文步骤。
 
-开发:改动 host 半部要重启 Harness;只改浏览器半部刷新页面即可。单测 `npm test` 覆盖 11 项(路径编码、血缘拆分、预检计数、级联删除、异位目录、补删日志、列表失败拒绝、非法 id、只删子树、HTTP 路由与跨站防护)。
+开发:改动 host 半部要重启 Harness;只改浏览器半部刷新页面即可。单测 `npm test` 覆盖 17 项(host 11:路径编码、血缘拆分、预检计数、级联删除、异位目录、补删日志、列表失败拒绝、非法 id、只删子树、HTTP 路由与跨站防护;browser 6:预检文案、fork 保留提示、已消失会话、删除与 localStorage 清理、预检失败回退、英文文案)。真机验收(2026-11-16):侧栏菜单点一次「删除会话…」→ 按钮变为「确认永久删除?将同时删除 3 个 Agent 子会话;此操作不可撤销」,未执行删除。

@@ -14,7 +14,7 @@
     "lib/client.js"
   ],
   "scripts": {
-    "test": "node --test test/session-delete.test.mjs"
+    "test": "node --test test/session-delete.test.mjs test/client.test.mjs"
   },
   "dsh": {
     "client": {
