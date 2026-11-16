@@ -1,7 +1,7 @@
 {
   "name": "dsh-plugin-session-delete",
-  "version": "1.0.4",
-  "description": "Delete a DeepSeek Harness session permanently and with zero local residue: sidebar menu entry with confirmation, stops running work, refuses sessions with forked children, and clears the event log, workspace accounting, archive/pin sets, projection cache, and spill files.",
+  "version": "1.1.0",
+  "description": "Delete a DeepSeek Harness session permanently and with zero local residue: sidebar menu entry with confirmation, deletes agent-spawned child sessions with their parent (ordinary forks stay), stops running work, and clears the event log, workspace accounting, archive/pin sets, projection cache, and spill files.",
   "type": "module",
   "main": "lib/index.js",
   "exports": {
@@ -13,10 +13,13 @@
     "lib/index.js",
     "lib/client.js"
   ],
+  "scripts": {
+    "test": "node --test test/session-delete.test.mjs"
+  },
   "dsh": {
     "client": {
       "inject": [
-        "@deepseek-ai/dsh-client-ui-slots"
+        "@deepseek-ai/dsh-client-ui-renderer"
       ],
       "platform": "web"
     }
