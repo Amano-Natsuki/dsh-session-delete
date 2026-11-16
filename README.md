@@ -60,6 +60,8 @@ dsh plugin install dsh-plugin-session-delete
 
 The plugin manager installs the package into the active profile and registers the row. If you prefer the UI, the same package is installable from **Settings → Plugins**. Restart the harness afterwards, then a red *Delete session…* row appears in each session's context menu.
 
+> **Version note.** The npm registry currently carries `1.0.0`. The cascade delete of agent child sessions, the delete preview, and the browser-state fix shipped in `1.1.0`, which is available from this repository (see the manual flow below or the [v1.1.0 release](https://github.com/Amano-Natsuki/dsh-session-delete/releases/tag/v1.1.0)) until the next npm publication.
+
 ### Manual (git clone + deploy script)
 
 Clone into a folder of your choice and deploy it into a profile:
